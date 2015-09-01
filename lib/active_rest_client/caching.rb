@@ -61,9 +61,10 @@ module ActiveRestClient
         headers.keys.select{|h| h.is_a? String}.each do |key|
           headers[key.downcase.to_sym] = headers[key]
         end
-
+        p headers
         if cache_store && (headers[:etag] || headers[:expires])
           key = "#{request.class_name}:#{request.get_params[:distinct_ids]}#{request.get_params[:to_date]}"
+          p cache_store
           ActiveRestClient::Logger.debug "  \033[1;4;32m#{ActiveRestClient::NAME}\033[0m #{key}--#{request.get_params} - Writing to cache"
           cached_response = CachedResponse.new(status:response.status, result:result)
           cached_response.etag = headers[:etag] if headers[:etag]
