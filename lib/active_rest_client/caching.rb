@@ -45,9 +45,7 @@ module ActiveRestClient
 
       def read_cached_response(request)
         if cache_store && perform_caching
-          key = "#{request.class_name}:#{request.get_params[:id]}#{request.get_params[:page]}"
-          p request
-          p request.get_params
+          key = "#{request.class_name}:#{request.get_params[:distinct_ids]}#{request.get_params[:to_date]}"
           ActiveRestClient::Logger.debug "  \033[1;4;32m#{ActiveRestClient::NAME}\033[0m #{key} - Trying to read from cache"
           value = cache_store.read(key)
           value = Marshal.load(value) rescue value
@@ -65,9 +63,7 @@ module ActiveRestClient
         end
 
         if cache_store && (headers[:etag] || headers[:expires])
-          key = "#{request.class_name}:#{request.get_params[:id]}#{request.get_params[:page]}"
-          p request
-          p request.get_params
+          key = "#{request.class_name}:#{request.get_params[:distinct_ids]}#{request.get_params[:to_date]}"
           ActiveRestClient::Logger.debug "  \033[1;4;32m#{ActiveRestClient::NAME}\033[0m #{key}--#{request.get_params} - Writing to cache"
           cached_response = CachedResponse.new(status:response.status, result:result)
           cached_response.etag = headers[:etag] if headers[:etag]
